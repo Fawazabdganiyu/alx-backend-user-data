@@ -27,7 +27,14 @@ def stats() -> str:
 
 
 @app_views.route('/unauthorized')
-def test_unauthorized() -> None:
-    """ Test that unauthorized handler is working
+def confirm_unauthorized() -> None:
+    """ Check that unauthorized handler is working
     """
     abort(401)
+
+
+@app_views.route('/forbidden')
+def confirm_forbidden() -> None:
+    """ Check that forbidden handler is working
+    """
+    abort(403)
