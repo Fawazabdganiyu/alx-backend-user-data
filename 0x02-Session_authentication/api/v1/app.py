@@ -57,8 +57,6 @@ def before_request():
                       '/api/v1/forbidden/', '/api/v1/auth_session/login/']
     if not auth.require_auth(request.path, excluded_paths):
         return
-    if auth.authorization_header(request) is None:
-        abort(401)
     if not auth.authorization_header(request) \
        and not auth.session_cookie(request):
         abort(401)
