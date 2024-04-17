@@ -22,7 +22,7 @@ class Auth:
         return path not in excluded_paths
 
     def authorization_header(self, request=None) -> str:
-        """Get authorization
+        """Get authorization content
         """
         if not request or 'Authorization' not in request.headers:
             return None

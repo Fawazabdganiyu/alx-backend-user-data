@@ -21,6 +21,9 @@ if auth_type == 'auth':
 if auth_type == 'basic_auth':
     from api.v1.auth.basic_auth import BasicAuth
     auth = BasicAuth()
+if auth_type == 'session_auth':
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
 
 
 @app.errorhandler(404)
@@ -57,6 +60,8 @@ def before_request():
     if auth.authorization_header(request) is None:
         abort(401)
     request.current_user = auth.current_user(request)
+    if not request.current_user:
+        abort(403)
 
 
 if __name__ == "__main__":
