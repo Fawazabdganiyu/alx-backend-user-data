@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Session Authentication module"""
+from typing import TypeVar, Optional
 from uuid import uuid4
-
-from typing import Optional, TypeVar
 
 from api.v1.auth.auth import Auth
 from models.user import User
