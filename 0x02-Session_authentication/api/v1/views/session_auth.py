@@ -45,3 +45,20 @@ def session_auth_login():
     resp.set_cookie(os.getenv('SESSION_NAME'), session_id)
 
     return resp
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def session_auth_logout():
+    """DELETE /api/v1/auth_session/logout
+
+    Returns:
+        An empty JSON on success, error 404 on failure
+    """
+    from api.v1.app import auth
+
+    logout = auth.destroy_session(request)
+    if not logout:
+        abort(404)
+
+    return jsonify({})
