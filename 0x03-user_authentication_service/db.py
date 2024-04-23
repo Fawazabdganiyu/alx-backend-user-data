@@ -36,14 +36,12 @@ class DB:
         return self.__session
 
     def add_user(
-            self, email: str, hashed_password: str,
-            session_id: str = 'session', reset_token: str = 'token'
+            self, email: str, hashed_password: str
     ) -> User:
         """Add a new user"""
         self.user_id += 1
         user = User(id=self.user_id, email=email,
-                    hashed_password=hashed_password,
-                    session_id=session_id, reset_token=reset_token)
+                    hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
         return user
