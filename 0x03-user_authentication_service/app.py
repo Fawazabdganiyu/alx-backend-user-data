@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Flask app module"""
+from typing import Union
+
 from flask import Flask, jsonify, request, Response, abort
 
 from auth import Auth
@@ -16,7 +18,7 @@ def index() -> Response:
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
-def users():
+def users() -> Union[Response, tuple[Response, int]]:
     """Register a user
 
     form data:
