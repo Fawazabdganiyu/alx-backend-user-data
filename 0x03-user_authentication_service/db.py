@@ -6,6 +6,7 @@ from typing import TypeVar
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 
 from user import Base, User
@@ -22,7 +23,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db")  # , echo=True)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -47,4 +48,13 @@ class DB:
                     session_id=session_id, reset_token=reset_token)
         self._session.add(user)
         self._session.commit()
+        return user
+
+    def find_user_by(self, **kwargs) -> UserT:
+        """Find a user by the given arbitrary keyword arguments"""
+        user = self._session.query(User).filter_by(**kwargs).first()
+        # InvalidRequestError would be raised implicitly when
+        # wrong query arguments are passed
+        if not user:
+            raise NoResultFound
         return user
