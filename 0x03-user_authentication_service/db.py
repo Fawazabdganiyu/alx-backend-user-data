@@ -11,8 +11,6 @@ from sqlalchemy.orm.session import Session
 
 from user import Base, User
 
-UserT = TypeVar("UserT", bound=User)
-
 
 class DB:
     """DB class
@@ -40,7 +38,7 @@ class DB:
     def add_user(
             self, email: str, hashed_password: str,
             session_id: str = 'session', reset_token: str = 'token'
-    ) -> UserT:
+    ) -> User:
         """Add a new user"""
         self.user_id += 1
         user = User(id=self.user_id, email=email,
@@ -50,7 +48,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs) -> UserT:
+    def find_user_by(self, **kwargs) -> User:
         """Find a user by the given arbitrary keyword arguments"""
         user = self._session.query(User).filter_by(**kwargs).first()
         # InvalidRequestError would be raised implicitly when
@@ -58,3 +56,15 @@ class DB:
         if not user:
             raise NoResultFound
         return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update a user"""
+        user = self.find_user_by(id=user_id)
+
+        for key, value in kwargs.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
+            else:
+                raise ValueError
+
+        self._session.commit()
