@@ -39,7 +39,7 @@ def users():
 
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
-def login():
+def login() -> Response:
     """Login a user
 
     form data:
@@ -60,9 +60,9 @@ def login():
 
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
-def logout():
+def logout() -> Response:
     """Logout a user"""
-    session_id = request.cookies.get('session_id')
+    session_id = request.cookies.get('session_id', '')
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
@@ -72,9 +72,9 @@ def logout():
 
 
 @app.route('/profile', methods=['GET'], strict_slashes=False)
-def profile():
+def profile() -> Response:
     """Get user profile"""
-    session_id = request.cookies.get('session_id')
+    session_id = request.cookies.get('session_id', '')
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
@@ -83,7 +83,7 @@ def profile():
 
 
 @app.route('/reset_password', methods=['POST'], strict_slashes=False)
-def get_reset_password_token():
+def get_reset_password_token() -> Response:
     """Get user password reset token
 
     form data:
@@ -99,7 +99,7 @@ def get_reset_password_token():
 
 
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
-def update_password():
+def update_password() -> Response:
     """Update user password
 
     form data:
@@ -109,14 +109,14 @@ def update_password():
     """
     email = request.form.get('email')
     new_password = request.form.get('new_password')
-    token = request.form.get('reset_token')
+    token = request.form.get('reset_token', '')
     try:
         AUTH.update_password(token, new_password)
-    except ValueError as e:
+    except ValueError:
         abort(403)
 
     return jsonify({'email': email, "message": "Password updated"})
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
