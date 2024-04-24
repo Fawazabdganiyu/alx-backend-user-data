@@ -13,26 +13,37 @@ def register_user(email: str, password: str) -> None:
 
 def log_in_wrong_password(email: str, password: str) -> None:
     """Test user login with wrong password"""
-    pass
+    data = {'email': email, 'password': password}
+    resp = requests.post('http://127.0.0.1:5000/sessions', data=data)
+    assert resp.status_code == 401
+
 
 def log_in(email: str, password: str) -> str:
     """Test user normal login"""
-    pass
+    data = {'email': email, 'password': password}
+    resp = requests.post('http://127.0.0.1:5000/sessions', data=data)
+    return resp.cookies.get('session_id')
+
 
 def profile_unlogged() -> None:
     """Test user profile with unlogged user"""
     pass
 
+
 def profile_logged(session_id: str) -> None:
     """Test user profile with logged in user"""
     pass
+
+
 def log_out(session_id: str) -> None:
     """Test a user is logged out"""
     pass
 
+
 def reset_password_token(email: str) -> str:
     """Test user reset password token"""
     pass
+
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """Test user password update"""
